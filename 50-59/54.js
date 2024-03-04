@@ -1,6 +1,19 @@
 function pokerHands(arr) {
     let result = 0
 
+    function type(conjunt){
+        const pares = conjunt.split(' ')
+        let value = pares[0][1]
+
+        for(let i = 1; i < pares.length; i++){
+            if(value != pares[i][1]){
+                return false
+            }
+        }
+
+        return true
+    }
+
     function Royal_Flush(win, loser){
         const test = (hand) => {
             let exp = /^(?=.*T([a-zA-Z]))(?=.*Q\1)(?=.*K\1)(?=.*A\1)(?=.*J\1)/
@@ -22,6 +35,10 @@ function pokerHands(arr) {
 
     function Straight_Flush(win, loser){
         const test = (hand) => {
+            if(!type(hand)){
+                return 0
+            }
+
             const ordem = { '2': 0, '3': 1, '4': 2, '5': 3, '6': 4, '7': 5, '8': 6, '9': 7, 't': 8, 'j': 9, 'q': 10, 'k': 11 }
             const pares = hand.split(' ')
 
@@ -47,7 +64,27 @@ function pokerHands(arr) {
     }
 
     function Four_of_a_Kind(win, loser){
+        const test = (hand) => {
+            const ordem = { '2': 0, '3': 1, '4': 2, '5': 3, '6': 4, '7': 5, '8': 6, '9': 7, 't': 8, 'j': 9, 'q': 10, 'k': 11 }
+            const pares = hand.split(' ')
+            const value = pares[0][0]
 
+            for (let i = 1; i < pares.length; i++) {    
+                if (value != pares[i][0]) {
+                    return 0
+                }
+            }
+          
+            return ordem[value]
+        }
+
+        if(test(win) > test(loser)){
+            return true
+        } else if (test(win) < test(loser)){
+            return false
+        } else {
+            return 'empate'
+        }
     }
 
     function Full_House(win, loser){
