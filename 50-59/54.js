@@ -1,5 +1,6 @@
 function pokerHands(arr) {
     let result = 0
+    const ordem = { '2': 0, '3': 1, '4': 2, '5': 3, '6': 4, '7': 5, '8': 6, '9': 7, 'T': 8, 'J': 9, 'Q': 10, 'K': 11, 'A': 12}
 
     function type(conjunt){
         const pares = conjunt.split(' ')
@@ -39,15 +40,138 @@ function pokerHands(arr) {
                 return 0
             }
 
-            const ordem = { '2': 0, '3': 1, '4': 2, '5': 3, '6': 4, '7': 5, '8': 6, '9': 7, 't': 8, 'j': 9, 'q': 10, 'k': 11 }
             const pares = hand.split(' ')
+            let see = []
+
+            for(let i = 1; i < pares.length; i++) {
+                see.push(ordem[pares[i][0]])
+            }
+
+            see.sort()
 
             for (let i = 1; i < pares.length; i++) {
-                const valorAnterior = pares[i - 1][0]
-                const valorAtual = pares[i][0]
+                const valorAnterior = see[i - 1][0]
+                const valorAtual = see[i][0]
             
                 if (ordem[valorAnterior] > ordem[valorAtual]) {
-                    return 0
+                    return -1
+                }
+            }
+          
+            return ordem[see[4][0]]
+        }
+
+        if(test(win) > test(loser)){
+            return true
+        } else if (test(win) < test(loser)){
+            return false
+        } else {
+            return 'empate'
+        }
+    }
+
+    function Four_of_a_Kind(win, loser){
+        const test = (hand) => {
+            const pares = hand.split(' ')
+            let values = [], quantity = []
+
+            for (let i = 1; i < pares.length; i++) {    
+                if (values.indexOf(ordem[pares[i][0]]) == -1) {
+                    values.push(ordem[pares[i][0]])
+                    quantity.push(1)
+                } else {
+                    quantity[i]++
+                }
+            }
+          
+            if(Math.max(quantity) == 4){
+                return values[quantity.indexOf(4)]
+            }
+
+            return -1
+        }
+
+        if(test(win) > test(loser)){
+            return true
+        } else if (test(win) < test(loser)){
+            return false
+        } else {
+            return 'empate'
+        }
+    }
+
+    function Full_House(win, loser){
+        const test = (hand) => {
+            const pares = hand.split(' ')
+            let values = [], quantity = []
+
+            for (let i = 1; i < pares.length; i++) {    
+                if (values.indexOf(ordem[pares[i][0]]) == -1) {
+                    values.push(ordem[pares[i][0]])
+                    quantity.push(1)
+                } else {
+                    quantity[i]++
+                }
+            }
+          
+            if(values.length == 2){
+                return values[quantity.indexOf(3)]
+            }
+
+            return -1
+        }
+
+        if(test(win) > test(loser)){
+            return true
+        } else if (test(win) < test(loser)){
+            return false
+        } else {
+            return 'empate'
+        }
+    }
+
+    function Flush(win, loser){
+        const test = (hand) => {
+           if(type(hand)){
+                const pares = hand.split(' ')
+                let nums = []
+                
+                for(let par in pares){
+                    nums.push(parseInt(par[0]))
+                }
+
+                return Math.max(nums) 
+           } else {
+                return -1
+           }
+        }
+
+        if(test(win) > test(loser)){
+            return true
+        } else if (test(win) < test(loser)){
+            return false
+        } else {
+            return 'empate'
+        }
+    }
+
+    function Straight(win, loser){
+        const test = (hand) => {
+            const pares = hand.split(' ')
+            let see = []
+
+            for(let i = 1; i < pares.length; i++) {
+                see.push(ordem[pares[i][0]])
+            }
+
+            see.sort()
+
+            for(let i = 1; i < pares.length; i++){
+                const valorAnterior = see[i - 1][0]
+                const valorAtual = see[i][0]
+            
+                if (ordem[valorAnterior] > ordem[valorAtual]) {
+                    return -1
                 }
             }
           
@@ -63,19 +187,25 @@ function pokerHands(arr) {
         }
     }
 
-    function Four_of_a_Kind(win, loser){
+    function Three_of_a_Kind(win, loser){
         const test = (hand) => {
-            const ordem = { '2': 0, '3': 1, '4': 2, '5': 3, '6': 4, '7': 5, '8': 6, '9': 7, 't': 8, 'j': 9, 'q': 10, 'k': 11 }
             const pares = hand.split(' ')
-            const value = pares[0][0]
+            let values = [], quantity = []
 
             for (let i = 1; i < pares.length; i++) {    
-                if (value != pares[i][0]) {
-                    return 0
+                if (values.indexOf(ordem[pares[i][0]]) == -1) {
+                    values.push(ordem[pares[i][0]])
+                    quantity.push(1)
+                } else {
+                    quantity[i]++
                 }
             }
           
-            return ordem[value]
+            if(Math.max(quantity) == 3){
+                return values[quantity.indexOf(3)]
+            }
+
+            return -1
         }
 
         if(test(win) > test(loser)){
@@ -85,22 +215,6 @@ function pokerHands(arr) {
         } else {
             return 'empate'
         }
-    }
-
-    function Full_House(win, loser){
-
-    }
-
-    function Flush(win, loser){
-
-    }
-
-    function Straight(win, loser){
-
-    }
-
-    function Three_of_a_Kind(win, loser){
-
     }
 
     function Two_Pairs(win, loser){
